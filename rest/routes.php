@@ -1,10 +1,10 @@
 <?php
 
 require 'Slim/Slim.php';
-require 'database/users.php';
+require "database/books.php";
 \Slim\Slim::registerAutoloader();
 
-$app = new \Slim\Slim;
+$app = new \Slim\Slim();
 
 /**
  * Index route
@@ -14,44 +14,52 @@ $app->get('/', function(){
 });
 
 /**
- * Get all users
+ * Get all books in the database
  */
-$app->get('/users/', function() {
-  echo getUsers();
+$app->get('/books/', function () {
+  $books = getAllBooks();
+
+  echo json_encode($books);
 });
 
 /**
- * Get user by name
+ * Get book by id
  */
-$app->get('/users/:name/', function($name) {
-  echo getUserByName($name);
+$app->get('/books/:id', function ($id) {
+  $book = getBookById($id);
+
+  echo json_encode($book);
 });
 
 /**
- * Create new user
+ * Add book to database
  */
-$app->post('/users/', function() {
+$app->post('/books/', function () {
   $request = \Slim\Slim::getInstance()->request();
-  $user = json_decode($request->getBody());
-
-  echo createUser($user);
+  $book = json_decode( $request->getBody(), true );
+  $response = saveBook($book);
+  
+  echo json_encode($response);
 });
 
 /**
- * Update user
+ * Edit book
  */
-$app->put('/users/:id', function($id) {
+$app->put('/books/:id/', function ($id) {
   $request = \Slim\Slim::getInstance()->request();
-  $user = json_decode($request->getBody());
+  $book = json_decode( $request->getBody(), true );
+  $response = editBook($book, $id);
 
-  echo updateUser($id, $user);
+  echo json_encode($response);
 });
 
 /**
- * Delete user
+ * Delete book
  */
-$app->delete('/users/:id', function($id) {
-  echo deleteUser($id);
+$app->delete('/books/:id/', function ($id) {
+  $response = deleteBook($id);
+
+  echo json_encode($response);
 });
 
 $app->run();
