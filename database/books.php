@@ -5,38 +5,52 @@ require "config.php";
 function getAllBooks() {
   $sql = "SELECT * FROM books";
   
-  $db = getConnection();
-  $statement = $db->query($sql);
-  $books = $statement->fetchAll(PDO::FETCH_OBJ);
+  try{
+    
+    $db = getConnection();
+    $statement = $db->query($sql);
+    $books = $statement->fetchAll(PDO::FETCH_OBJ);
+    return ["success" => true, "books" => $books];
 
-  return $books;
+  } catch (PDOException $e) {
+    return ["success" => false, "error" => $e->errorInfo];
+  }
 }
 
 function getBookById($id) {
   $sql = "SELECT * FROM books WHERE id = $id";
 
-  $db = getConnection();
-  $statement = $db->query($sql);
-  $statement->execute();
-  $book = $statement->fetchObject();
+  try {
+    $db = getConnection();
+    $statement = $db->query($sql);
+    $statement->execute();
+    $book = $statement->fetchObject();
+    return ["success" => true, "book" => $book];
 
-  return $book;
+  } catch (PDOException $e) {
+    return ["success" => false, "error" => $e->errorInfo];
+  }
 }
 
 function saveBook($book) {
   $sql = "INSERT INTO books VALUES (:id, :title, :author, :year)";
+  
+  try {
+    $db = getConnection();
+    $statement = $db->prepare($sql);
+    $statement->bindParam("id", $book['id']);
+    $statement->bindParam("title", $book['title']);
+    $statement->bindParam("author", $book['author']);
+    $statement->bindParam("year", $book['year']);
 
-  $db = getConnection();
-  $statement = $db->prepare($sql);
-  $statement->bindParam("id", $book['id']);
-  $statement->bindParam("title", $book['title']);
-  $statement->bindParam("author", $book['author']);
-  $statement->bindParam("year", $book['year']);
+    $statement->execute();
 
-  $statement->execute();
+    $book['id'] = $db->lastInsertId();
+    return ["success" => true, "book" => $book];
 
-  $book['id'] = $db->lastInsertId();
-  return $book;
+  } catch (PDOException $e) {
+    return ["success" => false, "error" => $e->errorInfo]; 
+  }
 }
 
 function editBook($book, $id) {
@@ -47,25 +61,33 @@ function editBook($book, $id) {
             year = :year 
           WHERE id = :id";
 
-  $db = getConnection();
+  try {
+    $db = getConnection();
+    $statement = $db->prepare($sql);
+    $statement->bindParam("id", $id);
+    $statement->bindParam("title", $book['title']);
+    $statement->bindParam("author", $book['author']);
+    $statement->bindParam("year", $book['year']);
 
-  $statement = $db->prepare($sql);
-  $statement->bindParam("id", $id);
-  $statement->bindParam("title", $book['title']);
-  $statement->bindParam("author", $book['author']);
-  $statement->bindParam("year", $book['year']);
+    $statement->execute();
+    return ["success" => true, "book" => $book];
 
-  $statement->execute();
-
-  return $book;
+  } catch (PDOException $e) {
+    return ["success" => false, "error" => $e->errorInfo];
+  }
 }
 
 function deleteBook($id) {
 
   $sql = "DELETE FROM books WHERE id = $id";
 
-  $db = getConnection();
-  $response = $db->query($sql);
+  try {
+    $db = getConnection();
+    $response = $db->query($sql);
+    
+    return ["success" => true];
 
-  return $response;
+  } catch (PDOException $e) {
+    return ["success" => false, "error" => $e->errorInfo];
+  }
 }
