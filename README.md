@@ -8,7 +8,7 @@ Is somewhat manual, but keeps the repo clean and intuitive:
 
 1. Create a database (with possible user)
 2. Create a table named "books" with the following columns:
-  * "id" - INT, auto incrementing
+  * "id" - INT, primary key, auto incrementing
   * "title" - VARCHAR
   * "author" - VARCHAR
   * "year" - INT (to keep it simple)
@@ -16,4 +16,4 @@ Is somewhat manual, but keeps the repo clean and intuitive:
 Fill in your details in `database/config.php`.
 
 ##Usage
-Use as data source for any HTTP-request capable client (JQuery, Angular, AndroidSDK, Curl, Postman).
+Use as data source for any HTTP-request capable client (JQuery, Angular, AndroidSDK, Curl, Postman, HTML form, plain javascript xmlhttp request).
