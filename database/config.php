@@ -4,7 +4,7 @@ function getConnection() {
   
   $dbhost="127.0.0.1";
   $dbuser="php-rest-db";
-  $dbpass="";
+  $dbpass="pass";
   $dbname="php-rest-db";
   
   $dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
