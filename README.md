@@ -13,6 +13,8 @@ Is somewhat manual, but keeps the repo clean and intuitive:
   * "author" - VARCHAR
   * "year" - INT (to keep it simple)
 
+An alternative to the above mathod would be to import `database/php-rest-db.sql` into an existing mysql installation.
+
 Fill in your details in `database/config.php`.
 
 ##Usage
